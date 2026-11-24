@@ -1,0 +1,26 @@
+## Pergunta: Qual a velocidade segura em tempestade na rota direta?
+Esperado: 12
+
+## Pergunta: E na rota protegida, qual a velocidade segura em tempestade?
+Esperado: 15
+
+## Pergunta: Qual a reserva mínima de combustível?
+Esperado: 15%
+
+## Pergunta: Qual o tamanho mínimo do lote de compra de combustível?
+Esperado: 5
+
+## Pergunta: Quanto custa e quanto dura o reparo do motor?
+Esperado: 24, 12
+
+## Pergunta: Qual navio chega primeiro ao porto de destino?
+Esperado: S3-CORAL
+
+## Pergunta: Algum navio está impedido de zarpar? Qual e por quê?
+Esperado: S1-FAROL
+
+## Pergunta: Qual a velocidade máxima permitida em nevoeiro?
+Esperado: não encontrado
+
+## Pergunta: Qual a capital do Brasil?
+Esperado: fora do escopo

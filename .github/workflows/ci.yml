@@ -1,0 +1,48 @@
+# G9 — CI: varredura de segredos e suíte offline.
+#
+# Nenhum segredo é passado como variável de ambiente aos testes: a suíte é
+# determinística e roda com a guarda de egress de `tests/conftest.py`
+# (qualquer conexão externa derruba o teste).
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  segredos:
+    name: Varredura de segredos (G9)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks (histórico inteiro)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: .env fora do repositório
+        run: |
+          if git ls-files --error-unmatch .env 2>/dev/null; then
+            echo "::error::.env está versionado — segredos no repositório"
+            exit 1
+          fi
+          grep -qx ".env" .gitignore
+
+  testes:
+    name: Testes sem rede (G9)
+    runs-on: ubuntu-latest
+    env:
+      LANGCHAIN_TRACING_V2: "false"
+      LANGFUSE_TRACING: "false"
+      EGRESS_STRICT: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+      - name: Rodar a suíte (bloqueio de rede ativo em tests/conftest.py)
+        run: python -m pytest tests -q
